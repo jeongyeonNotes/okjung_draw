@@ -1,190 +1,189 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>선물박스 뽑기</title>
+<meta charset="UTF-8">
+<title>선물박스 뽑기</title>
 
-    <style>
-        :root { --scale: 1; }
+<style>
+:root { --scale: 1; }
 
-        body {
-            background: #ffffff;
-            color: #0f172a;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 30px;
-            transform: scale(var(--scale));
-            transform-origin: top center;
-        }
+body {
+    background: #ffffff;
+    color: #0f172a;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 30px;
+    transform: scale(var(--scale));
+    transform-origin: top center;
+}
 
-        /* ===== 인덱스 ===== */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(9, 1fr);
-            gap: 10px;
-            max-width: 620px;
-            margin: 30px auto;
-        }
+/* ===== 인덱스 ===== */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 10px;
+    max-width: 620px;
+    margin: 30px auto;
+}
 
-        .cell {
-            background: #f1f5f9;
-            padding: 16px 0;
-            border-radius: 8px;
-            font-size: 18px;
-        }
+.cell {
+    background: #f1f5f9;
+    padding: 16px 0;
+    border-radius: 8px;
+    font-size: 18px;
+}
 
-        .cell.picked {
-            background: #e2e8f0;
-            color: #64748b;
-        }
+.cell.picked {
+    background: #e2e8f0;
+    color: #64748b;
+}
 
-        /* ===== 선물박스 ===== */
-        .box-wrapper {
-            width: 220px;
-            margin: 40px auto;
-        }
+/* ===== 선물박스 ===== */
+.box-wrapper {
+    width: 220px;
+    margin: 40px auto;
+}
 
-        #lid {
-            transform-origin: center bottom;
-        }
+#lid {
+    transform-origin: center bottom;
+}
 
-        .shake {
-            animation: shake 0.6s;
-        }
+.shake {
+    animation: shake 0.6s;
+}
 
-        @keyframes shake {
-            0% { transform: rotate(0); }
-            25% { transform: rotate(4deg); }
-            50% { transform: rotate(-4deg); }
-            75% { transform: rotate(3deg); }
-            100% { transform: rotate(0); }
-        }
+@keyframes shake {
+    0% { transform: rotate(0); }
+    25% { transform: rotate(4deg); }
+    50% { transform: rotate(-4deg); }
+    75% { transform: rotate(3deg); }
+    100% { transform: rotate(0); }
+}
 
-        .open #lid {
-            animation: openLid 0.6s forwards;
-        }
+.open #lid {
+    animation: openLid 0.6s forwards;
+}
 
-        @keyframes openLid {
-            to {
-                transform: rotateX(70deg) translateY(-30px);
-            }
-        }
+@keyframes openLid {
+    to {
+        transform: rotateX(70deg) translateY(-30px);
+    }
+}
 
-        /* ===== 버튼 ===== */
-        .buttons {
-            margin-top: 20px;
-        }
+/* ===== 버튼 ===== */
+.buttons {
+    margin-top: 20px;
+}
 
-        button {
-            padding: 16px 30px;
-            font-size: 18px;
-            border-radius: 12px;
-            border: none;
-            cursor: pointer;
-            margin: 6px;
-        }
+button {
+    padding: 16px 30px;
+    font-size: 18px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    margin: 6px;
+}
 
-        .draw-btn {
-            background: #38bdf8;
-            color: white;
-        }
+.draw-btn {
+    background: #38bdf8;
+    color: white;
+}
 
-        .reset-btn {
-            background: #e5e7eb;
-        }
+.reset-btn {
+    background: #e5e7eb;
+}
 
-        .screen-btn {
-            background: #22c55e;
-            color: white;
-        }
+.screen-btn {
+    background: #22c55e;
+    color: white;
+}
 
-        /* ===== 모달 ===== */
-        .modal-bg {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.45);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-        }
+/* ===== 모달 ===== */
+.modal-bg {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
 
-        .modal {
-            background: white;
-            padding: 50px 70px;
-            border-radius: 26px;
-            text-align: center;
-            position: relative;
-            animation: modalPop 0.4s ease;
-        }
+.modal {
+    background: white;
+    padding: 50px 70px;
+    border-radius: 26px;
+    text-align: center;
+    position: relative;
+    animation: modalPop 0.4s ease;
+}
 
-        @keyframes modalPop {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
-        }
+@keyframes modalPop {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
 
-        .modal h2 {
-            font-size: 34px;
-        }
+.modal h2 {
+    font-size: 34px;
+}
 
-        .modal .num {
-            font-size: 96px;
-            font-weight: bold;
-            color: #f43f5e;
-            margin: 20px 0 30px;
-            animation: glow 1.5s infinite alternate;
-        }
+.modal .num {
+    font-size: 96px;
+    font-weight: bold;
+    color: #f43f5e;
+    margin: 20px 0 30px;
+    animation: glow 1.5s infinite alternate;
+}
 
-        @keyframes glow {
-            from { text-shadow: 0 0 10px #fda4af; }
-            to { text-shadow: 0 0 30px #fb7185; }
-        }
+@keyframes glow {
+    from { text-shadow: 0 0 10px #fda4af; }
+    to { text-shadow: 0 0 30px #fb7185; }
+}
 
-        /* ===== 폭죽 ===== */
-        .firework {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background: #facc15;
-            border-radius: 50%;
-            animation: fire 1s forwards;
-        }
+/* ===== 폭죽 ===== */
+.firework {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #facc15;
+    border-radius: 50%;
+    animation: fire 1s forwards;
+}
 
-        @keyframes fire {
-            to {
-                transform: translate(var(--x), var(--y)) scale(0);
-                opacity: 0;
-            }
-        }
-    </style>
+@keyframes fire {
+    to {
+        transform: translate(var(--x), var(--y)) scale(0);
+        opacity: 0;
+    }
+}
+</style>
 </head>
 
 <body>
 
 <h1>🎁 옥정교회 선물 뽑기</h1>
 
-<!-- 🎁 SVG 선물박스 -->
 <div class="box-wrapper" id="boxWrap">
-    <svg width="220" height="220" viewBox="0 0 220 220">
-        <ellipse cx="110" cy="195" rx="70" ry="12" fill="#000" opacity="0.08"/>
-        <rect x="40" y="90" width="140" height="90" rx="14" fill="url(#boxGrad)"/>
-        <rect x="100" y="90" width="20" height="90" fill="#fbbf24"/>
-        <rect x="40" y="125" width="140" height="20" fill="#fbbf24"/>
-        <g id="lid">
-            <rect x="35" y="60" width="150" height="40" rx="14" fill="url(#lidGrad)"/>
-            <rect x="100" y="60" width="20" height="40" fill="#facc15"/>
-        </g>
-        <defs>
-            <linearGradient id="boxGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#fb7185"/>
-                <stop offset="100%" stop-color="#f43f5e"/>
-            </linearGradient>
-            <linearGradient id="lidGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#fda4af"/>
-                <stop offset="100%" stop-color="#fb7185"/>
-            </linearGradient>
-        </defs>
-    </svg>
+<svg width="220" height="220" viewBox="0 0 220 220">
+    <ellipse cx="110" cy="195" rx="70" ry="12" fill="#000" opacity="0.08"/>
+    <rect x="40" y="90" width="140" height="90" rx="14" fill="url(#boxGrad)"/>
+    <rect x="100" y="90" width="20" height="90" fill="#fbbf24"/>
+    <rect x="40" y="125" width="140" height="20" fill="#fbbf24"/>
+    <g id="lid">
+        <rect x="35" y="60" width="150" height="40" rx="14" fill="url(#lidGrad)"/>
+        <rect x="100" y="60" width="20" height="40" fill="#facc15"/>
+    </g>
+    <defs>
+        <linearGradient id="boxGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#fb7185"/>
+            <stop offset="100%" stop-color="#f43f5e"/>
+        </linearGradient>
+        <linearGradient id="lidGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#fda4af"/>
+            <stop offset="100%" stop-color="#fb7185"/>
+        </linearGradient>
+    </defs>
+</svg>
 </div>
 
 <div class="buttons">
@@ -195,7 +194,6 @@
 
 <div class="grid" id="grid"></div>
 
-<!-- 🎉 모달 -->
 <div class="modal-bg" id="modalBg">
     <div class="modal" id="modal">
         <h2>🎉 축하합니다!</h2>
@@ -205,106 +203,128 @@
 </div>
 
 <script>
-    const TOTAL = 45;
-    let picked = new Set();
-    let available = [];
-    let screenMode = false;
+/* ===== 효과음 (파일 없음) ===== */
+let audioCtx;
 
-    const boxWrap = document.getElementById("boxWrap");
-    const grid = document.getElementById("grid");
-    const modalBg = document.getElementById("modalBg");
-    const modalNum = document.getElementById("modalNum");
-    const modal = document.getElementById("modal");
-
-    /* ===== 저장 ===== */
-    function save() {
-        localStorage.setItem("picked", JSON.stringify([...picked]));
+function playSound(freq, duration = 0.25, type = "triangle", volume = 0.25) {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
 
-    function load() {
-        picked = new Set(JSON.parse(localStorage.getItem("picked") || "[]"));
-        available = Array.from({ length: TOTAL }, (_, i) => i + 1)
-            .filter(n => !picked.has(n));
-    }
+    osc.type = type;
+    osc.frequency.value = freq;
 
-    /* ===== 초기화 ===== */
-    function init() {
-        load();
-        renderGrid();
-    }
-    init();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
 
-    /* ===== 그리드 ===== */
-    function renderGrid() {
-        grid.innerHTML = "";
-        for (let i = 1; i <= TOTAL; i++) {
-            const d = document.createElement("div");
-            d.className = "cell";
-            if (picked.has(i)) {
-                d.classList.add("picked");
-                d.innerText = "🎁";
-            } else {
-                d.innerText = i;
-            }
-            grid.appendChild(d);
+    gain.gain.setValueAtTime(volume, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration);
+}
+
+/* ===== 로직 ===== */
+const TOTAL = 45;
+let picked = new Set();
+let available = [];
+let screenMode = false;
+
+const boxWrap = document.getElementById("boxWrap");
+const grid = document.getElementById("grid");
+const modalBg = document.getElementById("modalBg");
+const modalNum = document.getElementById("modalNum");
+const modal = document.getElementById("modal");
+
+function save() {
+    localStorage.setItem("picked", JSON.stringify([...picked]));
+}
+
+function load() {
+    picked = new Set(JSON.parse(localStorage.getItem("picked") || "[]"));
+    available = Array.from({ length: TOTAL }, (_, i) => i + 1)
+        .filter(n => !picked.has(n));
+}
+
+function init() {
+    load();
+    renderGrid();
+}
+init();
+
+function renderGrid() {
+    grid.innerHTML = "";
+    for (let i = 1; i <= TOTAL; i++) {
+        const d = document.createElement("div");
+        d.className = "cell";
+        if (picked.has(i)) {
+            d.classList.add("picked");
+            d.innerText = "🎁";
+        } else {
+            d.innerText = i;
         }
+        grid.appendChild(d);
     }
+}
 
-    /* ===== 뽑기 ===== */
-    function draw() {
-        if (available.length === 0) return;
+/* ===== 뽑기 ===== */
+function draw() {
+    if (available.length === 0) return;
 
-        boxWrap.classList.remove("open");
-        boxWrap.classList.add("shake");
+    playSound(300, 0.2, "square", 0.18); // 흔들림
 
-        setTimeout(() => {
-            boxWrap.classList.remove("shake");
-            boxWrap.classList.add("open");
-        }, 600);
+    boxWrap.classList.remove("open");
+    boxWrap.classList.add("shake");
 
-        setTimeout(() => {
-            const idx = Math.floor(Math.random() * available.length);
-            const num = available.splice(idx, 1)[0];
-            picked.add(num);
-            save();
+    setTimeout(() => {
+        boxWrap.classList.remove("shake");
+        boxWrap.classList.add("open");
+    }, 600);
 
-            modalNum.innerText = num;
-            modalBg.style.display = "flex";
-            firework();
-            renderGrid();
-        }, 1100);
-    }
+    setTimeout(() => {
+        const idx = Math.floor(Math.random() * available.length);
+        const num = available.splice(idx, 1)[0];
+        picked.add(num);
+        save();
 
-    /* ===== 폭죽 ===== */
-    function firework() {
-        for (let i = 0; i < 24; i++) {
-            const f = document.createElement("div");
-            f.className = "firework";
-            f.style.setProperty("--x", `${Math.random()*240-120}px`);
-            f.style.setProperty("--y", `${Math.random()*240-120}px`);
-            modal.appendChild(f);
-            setTimeout(() => f.remove(), 1000);
-        }
-    }
+        playSound(900, 0.35, "triangle", 0.35); // 당첨
 
-    function closeModal() {
-        modalBg.style.display = "none";
-    }
-
-    /* ===== 초기화 ===== */
-    function resetAll() {
-        localStorage.removeItem("picked");
-        picked.clear();
-        available = Array.from({ length: TOTAL }, (_, i) => i + 1);
+        modalNum.innerText = num;
+        modalBg.style.display = "flex";
+        firework();
         renderGrid();
-        modalBg.style.display = "none";
-    }
+    }, 1100);
+}
 
-    /* ===== 대형 스크린 ===== */
-    function toggleScreen() {
-        screenMode = !screenMode;
-        document.documentElement.style.setProperty("--scale", screenMode ? 1.4 : 1);
+function firework() {
+    for (let i = 0; i < 24; i++) {
+        const f = document.createElement("div");
+        f.className = "firework";
+        f.style.setProperty("--x", `${Math.random()*240-120}px`);
+        f.style.setProperty("--y", `${Math.random()*240-120}px`);
+        modal.appendChild(f);
+        setTimeout(() => f.remove(), 1000);
     }
+}
+
+function closeModal() {
+    modalBg.style.display = "none";
+}
+
+function resetAll() {
+    localStorage.removeItem("picked");
+    picked.clear();
+    available = Array.from({ length: TOTAL }, (_, i) => i + 1);
+    renderGrid();
+    modalBg.style.display = "none";
+}
+
+function toggleScreen() {
+    screenMode = !screenMode;
+    document.documentElement.style.setProperty("--scale", screenMode ? 1.4 : 1);
+}
 </script>
 
 </body>
