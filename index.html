@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>선물박스 뽑기1111</title>
+<title>선물박스 뽑기</title>
 
 <style>
 :root { --scale: 1; }
@@ -17,7 +17,7 @@ body {
     transform-origin: top center;
 }
 
-/* ===== 인덱스 ===== */
+/* ===== 번호 그리드 ===== */
 .grid {
     display: grid;
     grid-template-columns: repeat(9, 1fr);
@@ -84,19 +84,9 @@ button {
     margin: 6px;
 }
 
-.draw-btn {
-    background: #38bdf8;
-    color: white;
-}
-
-.reset-btn {
-    background: #e5e7eb;
-}
-
-.screen-btn {
-    background: #22c55e;
-    color: white;
-}
+.draw-btn { background: #38bdf8; color: white; }
+.reset-btn { background: #e5e7eb; }
+.screen-btn { background: #22c55e; color: white; }
 
 /* ===== 모달 ===== */
 .modal-bg {
@@ -166,23 +156,13 @@ button {
 <div class="box-wrapper" id="boxWrap">
 <svg width="220" height="220" viewBox="0 0 220 220">
     <ellipse cx="110" cy="195" rx="70" ry="12" fill="#000" opacity="0.08"/>
-    <rect x="40" y="90" width="140" height="90" rx="14" fill="url(#boxGrad)"/>
+    <rect x="40" y="90" width="140" height="90" rx="14" fill="#fb7185"/>
     <rect x="100" y="90" width="20" height="90" fill="#fbbf24"/>
     <rect x="40" y="125" width="140" height="20" fill="#fbbf24"/>
     <g id="lid">
-        <rect x="35" y="60" width="150" height="40" rx="14" fill="url(#lidGrad)"/>
+        <rect x="35" y="60" width="150" height="40" rx="14" fill="#fda4af"/>
         <rect x="100" y="60" width="20" height="40" fill="#facc15"/>
     </g>
-    <defs>
-        <linearGradient id="boxGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#fb7185"/>
-            <stop offset="100%" stop-color="#f43f5e"/>
-        </linearGradient>
-        <linearGradient id="lidGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#fda4af"/>
-            <stop offset="100%" stop-color="#fb7185"/>
-        </linearGradient>
-    </defs>
 </svg>
 </div>
 
@@ -203,27 +183,52 @@ button {
 </div>
 
 <script>
-/* ===== 효과음 (파일 없음) ===== */
+/* ===== Web Audio (파일 없는 효과음) ===== */
 let audioCtx;
 
-function playSound(freq, duration = 0.25, type = "triangle", volume = 0.25) {
-    if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
+function playShakeSound() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
 
-    osc.type = type;
-    osc.frequency.value = freq;
+    osc.type = "square";
+    osc.frequency.value = 280;
 
     osc.connect(gain);
     gain.connect(audioCtx.destination);
 
-    gain.gain.setValueAtTime(volume, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
 
     osc.start();
-    osc.stop(audioCtx.currentTime + duration);
+    osc.stop(audioCtx.currentTime + 0.2);
+}
+
+/* 🎶 따라란~ 멜로디 */
+function playTtararan() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    const notes = [523, 659, 784]; // 도-미-솔
+    let time = audioCtx.currentTime;
+
+    notes.forEach(freq => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = "triangle";
+        osc.frequency.value = freq;
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        gain.gain.setValueAtTime(0.35, time);
+        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.18);
+
+        osc.start(time);
+        osc.stop(time + 0.18);
+
+        time += 0.15;
+    });
 }
 
 /* ===== 로직 ===== */
@@ -269,11 +274,10 @@ function renderGrid() {
     }
 }
 
-/* ===== 뽑기 ===== */
 function draw() {
     if (available.length === 0) return;
 
-    playSound(300, 0.2, "square", 0.18); // 흔들림
+    playShakeSound();
 
     boxWrap.classList.remove("open");
     boxWrap.classList.add("shake");
@@ -289,7 +293,7 @@ function draw() {
         picked.add(num);
         save();
 
-        playSound(900, 0.35, "triangle", 0.35); // 당첨
+        playTtararan(); // 🎶 따라란~
 
         modalNum.innerText = num;
         modalBg.style.display = "flex";
